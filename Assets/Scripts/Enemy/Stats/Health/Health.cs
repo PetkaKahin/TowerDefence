@@ -35,6 +35,7 @@ public class Health : IHealth
     public void Reset()
     {
         _health = MaxHealth;
+        Changed?.Invoke();
     }
 
     public void TakeDamage(float damage)
