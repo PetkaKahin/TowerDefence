@@ -7,7 +7,7 @@ namespace Enemy
     public class EnemyPool : MonoBehaviour
     {
         private EnemyFactory _factory;
-        private List<BaseEnemy> _ememyes = new List<BaseEnemy>();
+        private List<BaseEnemy> _enemyes = new List<BaseEnemy>();
 
         public void Construct(EnemyFactory factory)
         {
@@ -16,15 +16,18 @@ namespace Enemy
 
         public BaseEnemy Get()
         {
-            BaseEnemy enemy = _ememyes.FirstOrDefault(findEnemy => findEnemy.gameObject.activeSelf == false);
+            BaseEnemy enemy = _enemyes.FirstOrDefault(findEnemy => findEnemy.gameObject.activeSelf == false);
 
             if (enemy == null)
+            {
                 enemy = _factory.Get(transform);
+                enemy = _factory.CreateNewRoute(enemy);
+                _enemyes.Add(enemy);
+                return enemy;
+            }
 
-            _ememyes.Add(enemy);
-
+            enemy = _factory.CreateSpawnPosition(enemy);
             enemy.gameObject.SetActive(true);
-            enemy = _factory.CreateNewRoute(enemy);
             enemy.BeginMove();
             enemy.ResetStats();
 

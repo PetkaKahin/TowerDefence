@@ -8,14 +8,16 @@ namespace Enemy
         private readonly MapForEnemy _map;
         private readonly Transform[] _spawnPoints;
         private readonly BaseEnemy _enemy; // это временно
+        private readonly EnemyConfig _config; // и это тоже
 
         private  Vector3[] _movePoints;
 
-        public EnemyFactory(BaseEnemy enemy, MapForEnemy map)
+        public EnemyFactory(BaseEnemy enemy, MapForEnemy map, EnemyConfig config)
         {
             _enemy = enemy;
             _spawnPoints = map.SpawnPoints.ToArray();
             _map = map;
+            _config = config;
 
             InicializeMovePoints();
         }
@@ -31,16 +33,20 @@ namespace Enemy
 
         public BaseEnemy CreateNewRoute(BaseEnemy enemy)
         {
-            enemy.SetPosition(_spawnPoints[Random.Range(0, _spawnPoints.Length)].position);
+            enemy = CreateSpawnPosition(enemy);
             enemy.Mover.CreateNewRute(_movePoints);
+            return enemy;
+        }
 
+        public BaseEnemy CreateSpawnPosition(BaseEnemy enemy)
+        {
+            enemy.SetPosition(_spawnPoints[Random.Range(0, _spawnPoints.Length)].position);
             return enemy;
         }
 
         private BaseEnemy InicializeEnemy(BaseEnemy enemy)
         {
-            enemy.Construct(new Mover(_movePoints, enemy.transform), 10f);
-
+            enemy.Construct(new Mover(_movePoints, enemy.transform, _config.Speed), new Health(_config.Health));
             return enemy;
         }
 

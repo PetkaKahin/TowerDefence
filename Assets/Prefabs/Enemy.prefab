@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 2115798093174477944}
   - component: {fileID: 6163136734406378965}
   - component: {fileID: 8590705899839080276}
-  - component: {fileID: -6707923453312193939}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e195d80461270940acbc28f29081ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _speed: 1
   _healthUI: {fileID: 5469588845967435974}
 --- !u!61 &8590705899839080276
 BoxCollider2D:
@@ -95,33 +94,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &-6707923453312193939
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2343542118134495890}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &6944837697851260603
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +189,10 @@ PrefabInstance:
     - target: {fileID: 330587919146292661, guid: 9438ba4f3f207254990627d0114a01c9, type: 3}
       propertyPath: m_Name
       value: Health
+      objectReference: {fileID: 0}
+    - target: {fileID: 330587919146292661, guid: 9438ba4f3f207254990627d0114a01c9, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2356960886329475862, guid: 9438ba4f3f207254990627d0114a01c9, type: 3}
       propertyPath: m_LocalScale.x

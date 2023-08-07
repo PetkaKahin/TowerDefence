@@ -6,10 +6,11 @@ namespace Enemy
 {
     public class Mover
     {
-        private readonly Vector3[] _movePoints;
         private readonly Transform _transform;
 
         private float _speed;
+
+        private Vector3[] _movePoints;
 
         private Sequence _sequence = DOTween.Sequence();
 
@@ -27,6 +28,8 @@ namespace Enemy
             _sequence.Kill();
             _sequence = DOTween.Sequence();
 
+            _movePoints = movePoints;
+
             Vector3 deltaPoint = _transform.position;
 
             foreach (Vector3 point in _movePoints)
@@ -35,8 +38,11 @@ namespace Enemy
                 _sequence.Append(_transform.DOMove(point, speedPoint).SetEase(Ease.Linear));
                 deltaPoint = point;
             }
+        }
 
-            _sequence.Pause();
+        public void Reset()
+        {
+            CreateNewRute(_movePoints);
         }
 
         public void SetSpeed(float speed)

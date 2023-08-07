@@ -1,4 +1,5 @@
-﻿using UI.Health;
+﻿using System;
+using UI.Health;
 using UnityEngine;
 
 namespace Enemy
@@ -6,21 +7,25 @@ namespace Enemy
     [RequireComponent(typeof(BoxCollider2D))]
     public class BaseEnemy : MonoBehaviour
     {
-        [SerializeField, Range(0.1f, 15f)] private float _speed;
         [SerializeField] private ViewHealth _healthUI; // вот это надо исправить
 
         private IHealth _health;
 
         public Mover Mover { get; private set; }
+
+        public event Action Died;
+        public event Action ChangedHealth;
         
-        public void Construct(Mover mover, float health) // бахнуть конфиг со статами врага
+        public void Construct(Mover mover, IHealth health)
         {
             Mover = mover;
-            Mover.SetSpeed(_speed); 
+            _health = health;
 
-            _health = new Health(health); // чтобы не было такого
             _health.Changed += ChangeHealth;
             _health.Died += Die;
+
+            BoxCollider2D collider = GetComponent<BoxCollider2D>();
+            collider.isTrigger = true;
         }
 
         private void OnDisable()
@@ -36,7 +41,7 @@ namespace Enemy
 
         public void BeginMove() => Mover.BeginMove();
 
-        public void SetPosition(Vector3 position) => transform.position = position; // думаю это ещё  можно поправить
+        public void SetPosition(Vector3 position) => transform.position = position;
 
         public void TakeDamage(float damage) => _health.TakeDamage(damage);
 
@@ -45,16 +50,19 @@ namespace Enemy
         public void ResetStats()
         {
             _health.Reset();
+            Mover.Reset();
         }
 
         private void ChangeHealth()
         {
-            _healthUI.Set(_health.MaxHealth, _health.Value);
+            _healthUI?.Set(_health.MaxHealth, _health.Value);
+            ChangedHealth?.Invoke();
         }
 
         private void Die()
         {
             gameObject.SetActive(false);
+            Died?.Invoke();
         }
     }
 }

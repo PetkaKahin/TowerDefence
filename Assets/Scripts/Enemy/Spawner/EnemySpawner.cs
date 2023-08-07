@@ -11,6 +11,8 @@ namespace Enemy
 
         [SerializeField] private BaseEnemy _enemy;
 
+        [SerializeField] private EnemyConfig _enemyConfig;
+
         [SerializeField] private EnemyPool _pool;
 
         [SerializeField] private float _coolDown;
@@ -23,13 +25,18 @@ namespace Enemy
         {
             DOTween.SetTweensCapacity(10000, 1000); // только, чтоб убрать сообщения из консоли, задолбали
 
-            _factory = new EnemyFactory(_enemy, _map);
+            _factory = new EnemyFactory(_enemy, _map, _enemyConfig);
 
             _pool.Construct(_factory);
 
             _sleep = new WaitForSeconds(_coolDown);
 
             StartCoroutine(Create());
+        }
+
+        private void OnValidate()
+        {
+            _sleep = new WaitForSeconds(_coolDown);
         }
 
         private IEnumerator Create()
