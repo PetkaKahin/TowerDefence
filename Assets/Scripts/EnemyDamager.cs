@@ -18,7 +18,7 @@ namespace Assets.Scripts
         {
             if (collision.gameObject.TryGetComponent(out BaseEnemy enemy))
             {
-                enemy.TakeDamage(_damage);
+                enemy.Health.TakeDamage(_damage);
             }
         }
     }

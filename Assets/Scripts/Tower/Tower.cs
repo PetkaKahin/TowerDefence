@@ -1,5 +1,5 @@
 ﻿using Enemy;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,33 +7,29 @@ namespace Tower
 {
     [RequireComponent(typeof(CircleCollider2D))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Tower : MonoBehaviour // временный скрипт, всё переделать по хорошему
+    public class Tower : MonoBehaviour
     {
-        [SerializeField] private float _radius;
-        [SerializeField] private float _damage;
-        [SerializeField] private float _coolDownAttak;
-
-        private CircleCollider2D _collider;
+        [SerializeField] private float _range;
 
         private List<BaseEnemy> _enemyes = new List<BaseEnemy>();
         private BaseEnemy _target;
 
-        private WaitForSeconds _sleep;
+        public event Action<BaseEnemy> TargetSelectied;
+        public event Action TargetDied;
 
         private void Awake()
         {
-            _collider = GetComponent<CircleCollider2D>();
-            _collider.radius = _radius;
-            _collider.isTrigger = true;
-            _sleep = new WaitForSeconds(_coolDownAttak);
-            StartCoroutine(Damage());
+            CircleCollider2D collider = GetComponent<CircleCollider2D>();
+            collider.radius = _range;
+            collider.isTrigger = true;
+
+            Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+            rigidbody.bodyType = RigidbodyType2D.Kinematic;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            BaseEnemy enemy;
-
-            if (collision.TryGetComponent(out enemy))
+            if (collision.TryGetComponent(out BaseEnemy enemy))
                 _enemyes.Add(enemy);
 
             if (_target == null)
@@ -42,31 +38,22 @@ namespace Tower
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            BaseEnemy enemy;
-
-            if (collision.TryGetComponent(out enemy))
-            {
-                ExitTarget();
-            }
+            if (collision.TryGetComponent(out BaseEnemy enemy))
+                ExitTarget(enemy);
         }
 
-        private IEnumerator Damage()
+        private void Update()
         {
-            while (true)
-            {
-                _target?.TakeDamage(_damage);
-                yield return _sleep;
-            }
+            if (_target != null)
+                Debug.DrawLine(transform.position, _target.transform.position, Color.magenta);
         }
 
-        private void ExitTarget()
+        private void ExitTarget(BaseEnemy enemy)
         {
-            if (_target != null) 
-            {
-                _target.Died -= ExitTarget;
-                _enemyes.Remove(_target);
-                _target = null;
-            }
+            _enemyes.Remove(enemy);
+            _target = null;
+            TargetDied?.Invoke();
+
             ChooseNewTarget();
         }
 
@@ -76,7 +63,8 @@ namespace Tower
                 return;
 
             _target = _enemyes[0];
-            _target.Died += ExitTarget;
+
+            TargetSelectied?.Invoke(_target);
         }
     }
 }
