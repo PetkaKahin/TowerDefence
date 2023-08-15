@@ -7,27 +7,23 @@ namespace Enemy
 {
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] private MapForEnemy _map;
+        [Header("Stats")]
+        [SerializeField, Range(0.05f, 5f)] private float _coolDown;
 
+        [Space, Header("Prefabs")]
         [SerializeField] private BaseEnemy _enemy;
 
         [SerializeField] private EnemyConfig _enemyConfig;
 
-        [SerializeField] private EnemyPool _pool;
-
-        [SerializeField] private float _coolDown;
-
-        private EnemyFactory _factory;
+        private EnemyPool _pool;
 
         private WaitForSeconds _sleep;
 
-        private void Awake()
+        public void Construct(EnemyPool pool)
         {
+            _pool = pool;
+
             DOTween.SetTweensCapacity(10000, 1000); // только, чтоб убрать сообщения из консоли, задолбали
-
-            _factory = new EnemyFactory(_enemy, _map, _enemyConfig);
-
-            _pool.Construct(_factory);
 
             _sleep = new WaitForSeconds(_coolDown);
 

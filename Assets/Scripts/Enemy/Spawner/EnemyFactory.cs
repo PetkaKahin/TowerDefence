@@ -5,14 +5,14 @@ namespace Enemy
 {
     public class EnemyFactory
     {
-        private readonly MapForEnemy _map;
+        private readonly MapPoints _map;
         private readonly Transform[] _spawnPoints;
         private readonly BaseEnemy _enemy; // это временно
         private readonly EnemyConfig _config; // и это тоже
 
-        private  Vector3[] _movePoints;
+        private Vector3[] _movePoints;
 
-        public EnemyFactory(BaseEnemy enemy, MapForEnemy map, EnemyConfig config)
+        public EnemyFactory(BaseEnemy enemy, EnemyConfig config, MapPoints map)
         {
             _enemy = enemy;
             _spawnPoints = map.SpawnPoints.ToArray();

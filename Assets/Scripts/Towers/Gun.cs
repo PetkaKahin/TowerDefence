@@ -1,19 +1,19 @@
-﻿using Assets.Scripts.Tower;
-using Enemy;
+﻿using Enemy;
 using System.Collections;
 using UnityEngine;
 
-namespace Tower
+namespace Towers
 {
+    [RequireComponent(typeof(BaseTower))]
     public class Gun : MonoBehaviour
     {
         [SerializeField, Range(0.1f, 5f)] private float _coolDown;
 
         [SerializeField] private Transform _spawnPoint;
 
-        [SerializeField] private BulletPool _pool;
+        private BulletPool _pool;
 
-        [SerializeField] private Tower _tower;
+        private BaseTower _tower;
 
         private BaseEnemy _target;
 
@@ -21,14 +21,22 @@ namespace Tower
 
         private IEnumerator _shooting;
 
+        private float _timer;
+
         private bool _isTarget => _target != null;
 
-        private void Awake()
+        private void Start()
         {
+            _tower = GetComponent<BaseTower>();
             _sleep = new WaitForSeconds(_coolDown);
             _tower.TargetDied += TargetDie;
             _tower.TargetSelectied += SetTarget;
             _shooting = Shooting();
+        }
+
+        public void Construct(BulletPool pool)
+        {
+            _pool = pool;
         }
 
         private void OnDisable()
@@ -37,9 +45,16 @@ namespace Tower
             _tower.TargetSelectied -= SetTarget;
         }
 
+        private void Update()
+        {
+            _timer += Time.deltaTime;
+        }
+
         public void SetTarget(BaseEnemy target)
         {
             _target = target;
+
+            StopCoroutine(_shooting);
             StartCoroutine(_shooting);
         }
 
@@ -47,7 +62,11 @@ namespace Tower
         {
             while (_isTarget)
             {
-                Shoot();
+                if (_timer >= _coolDown)
+                {
+                    _timer = 0;
+                    Shoot();
+                }
 
                 yield return _sleep;
             }

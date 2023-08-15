@@ -1,5 +1,6 @@
 using Enemy;
 using System;
+using UnityEngine;
 
 public class Health : IHealth
 {
@@ -42,6 +43,12 @@ public class Health : IHealth
     {
         if (damage < 0)
             throw new ArgumentOutOfRangeException(nameof(damage));
+
+        if (_health <= 0)
+        {
+            Debug.LogWarning($"Попытка нанести урон мертвому");
+            return;
+        }
 
         _health -= damage;
         Changed?.Invoke();

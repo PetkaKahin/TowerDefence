@@ -2,7 +2,7 @@ using Enemy;
 using UnityEngine;
 using System;
 
-namespace Tower
+namespace Towers
 {
     [RequireComponent(typeof(CircleCollider2D))]
     public class Bullet : MonoBehaviour
@@ -14,17 +14,20 @@ namespace Tower
 
         private IHealth _targetEnemy;
 
+        private IMover _mover;
         public void Construct(Transform target, IHealth targetEnemy)
         {
             _target = target;
             _targetEnemy = targetEnemy;
-            _targetEnemy.Died += Destroy;
+
+            _targetEnemy.Died += LossTarget;
+
+            _mover = new MoverToTarget(transform, _target, _speed);
         }
 
         private void Update()
         {
-            Vector3 direction = (_target.position - transform.position).normalized;
-            transform.position += direction * _speed * Time.deltaTime;
+            _mover.Move();   
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -32,14 +35,24 @@ namespace Tower
             if (collision.TryGetComponent(out BaseEnemy enemy))
             {
                 enemy.Health.TakeDamage(_damage);
-                Destroy();
+                gameObject.SetActive(false);
             }
         }
 
-        private void Destroy()
+        private void LossTarget()
         {
-            _targetEnemy.Died -= Destroy;
+            _targetEnemy.Died -= LossTarget;
+
+            Vector3 direction = (_target.position - transform.position).normalized;
+            _mover = new MoverStraightLine(transform, direction, _speed);
+        }
+
+        private void OnDisable()
+        {
             gameObject.SetActive(false);
+            _targetEnemy.Died -= LossTarget;
+            _target = null;
+            _targetEnemy = null;
         }
     }
 }

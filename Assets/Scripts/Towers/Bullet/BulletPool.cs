@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Tower;
 
-namespace Assets.Scripts.Tower
+namespace Towers
 {
     public class BulletPool : MonoBehaviour
     {

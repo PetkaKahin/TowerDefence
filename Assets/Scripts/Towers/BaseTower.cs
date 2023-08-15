@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tower
+namespace Towers
 {
     [RequireComponent(typeof(CircleCollider2D))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Tower : MonoBehaviour
+    public class BaseTower : MonoBehaviour
     {
         [SerializeField] private float _range;
 
