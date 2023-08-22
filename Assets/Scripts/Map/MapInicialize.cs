@@ -1,37 +1,18 @@
-﻿using Enemy;
-using System.Collections.Generic;
-using Towers;
-using UI;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Map
 {
+    [RequireComponent(typeof(MapData))]
     public class MapInicialize : MonoBehaviour
     {
-        [SerializeField] private MapPoints _mapPoints;
-        [SerializeField] private BulletPool _bulletPool;
-        [SerializeField] private EnemyPool _enemyPool;
+        [SerializeField] private MapConfig _mapConfig;
 
-        [SerializeField] private Transform _UI;
-
-        [Space, Header("Prefabs")]
-        [SerializeField] private BaseEnemy _enemy;
-        [SerializeField] private EnemyConfig _enemyConfig;
-
-        [SerializeField] private List<BaseTower> _towers = new List<BaseTower>();
-
-        [SerializeField] private EnemySpawner _enemySpawnerPrefab;
-
-        [SerializeField] private TowerHeandlerUI _towerHeandlerUIPrefab;
-
-        private List<EnemySpawner> _enemySpawners = new List<EnemySpawner>(); // обернуть в дату или типа того
-        private List<TowerHeandlerUI> _towerHeandlersUI = new List<TowerHeandlerUI>();
-
-        private TowerFactory _towerFactory;
-        private EnemyFactory _enemyFactory;
+        private MapData _mapData;
 
         private void Awake()
         {
+            _mapData = GetComponent<MapData>();
+
             InicializeEnemyPool();
 
             InicializeEnemySpawner();
@@ -41,27 +22,27 @@ namespace Map
 
         private void InicializeEnemyPool()
         {
-            _enemyFactory = new EnemyFactory(_enemy, _enemyConfig, _mapPoints);
-            _enemyPool.Construct(_enemyFactory);
+            _mapData.EnemyFactoryConstruct(_mapConfig.Enemy, _mapConfig.EnemyConfig, _mapData.MapPoints);
+            _mapData.EnemyPool.Construct(_mapData.EnemyFactory);
         }
 
         private void InicializeEnemySpawner()
         {
-            for (int i = 0; i < _mapPoints.SpawnPoints.Count; i++)
+            for (int i = 0; i < _mapData.MapPoints.SpawnPoints.Count; i++)
             {
-                _enemySpawners.Add(Instantiate(_enemySpawnerPrefab, _mapPoints.SpawnPoints[i].position, Quaternion.identity, transform));
-                _enemySpawners[i].Construct(_enemyPool);
+                _mapData.EnemySpawners.Add(Instantiate(_mapConfig.EnemySpawner, _mapData.MapPoints.SpawnPoints[i].position, Quaternion.identity, _mapData.MapPoints.SpawnPoints[i]));
+                _mapData.EnemySpawners[i].Construct(_mapData.EnemyPool);
             }
         }
 
         private void InicializeTowerHeandlers()
         {
-            _towerFactory = new TowerFactory(_towers, _bulletPool);
+            _mapData.TowerFactoryConstruct(_mapConfig.Towers, _mapData.BulletPool);
 
-            for (int i = 0; i < _mapPoints.TowerPoints.Count; i++)
+            for (int i = 0; i < _mapData.MapPoints.TowerPoints.Count; i++)
             {
-                _towerHeandlersUI.Add(Instantiate(_towerHeandlerUIPrefab, _mapPoints.TowerPoints[i].transform.position, Quaternion.identity, _UI));
-                _mapPoints.TowerPoints[i].Construct(_towerFactory, _towerHeandlersUI[i]);
+                _mapData.TowerHeandlersUI.Add(Instantiate(_mapConfig.TowerHeandlerUI, _mapData.MapPoints.TowerPoints[i].transform.position, Quaternion.identity, _mapData.UI));
+                _mapData.MapPoints.TowerPoints[i].Construct(_mapData.TowerFactory, _mapData.TowerHeandlersUI[i]);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Enemy;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,9 +8,11 @@ namespace Towers
     [RequireComponent(typeof(BaseTower))]
     public class Gun : MonoBehaviour
     {
-        [SerializeField, Range(0.1f, 5f)] private float _coolDown;
+        [SerializeField, Range(0.05f, 5f)] private float _coolDown;
+        [SerializeField, Range(0.05f, 5f)] private float _minCoolDown;
 
-        [SerializeField] private Transform _spawnPoint;
+        [SerializeField, Range(0.1f, 50f)] private float _damage;
+        [SerializeField, Range(0.1f, 50f)] private float _maxDamage;
 
         private BulletPool _pool;
 
@@ -25,18 +28,30 @@ namespace Towers
 
         private bool _isTarget => _target != null;
 
-        private void Start()
-        {
-            _tower = GetComponent<BaseTower>();
-            _sleep = new WaitForSeconds(_coolDown);
-            _tower.TargetDied += TargetDie;
-            _tower.TargetSelectied += SetTarget;
-            _shooting = Shooting();
-        }
+        public float CoolDown => _coolDown;
+        public float MinCoolDown => _minCoolDown;
+        public float Damage => _damage;
+        public float MaxDamage => _maxDamage;
 
         public void Construct(BulletPool pool)
         {
             _pool = pool;
+        }
+
+        private void Start()
+        {
+            if (_coolDown < MinCoolDown)
+                _coolDown = MinCoolDown;
+
+            if (_damage > MaxDamage)
+                _damage = MaxDamage;
+
+            _tower = GetComponent<BaseTower>();
+            SetCoolDonw(_coolDown);
+            _tower.TargetDied += TargetDie;
+            _tower.TargetSelectied += SetTarget;
+
+            _shooting = Shooting();
         }
 
         private void OnDisable()
@@ -49,6 +64,39 @@ namespace Towers
         {
             _timer += Time.deltaTime;
         }
+
+        public void SetDamage(float damage)
+        {
+            if (damage < 0)
+                throw new ArgumentOutOfRangeException(nameof(damage));
+
+            if (damage > MaxDamage)
+            {
+                _damage = MaxDamage;
+                return;
+            }
+
+            _damage = damage;
+        }
+
+        public void SetCoolDonw(float coolDonw)
+        {
+            if (coolDonw < 0)
+                throw new ArgumentOutOfRangeException(nameof(coolDonw));
+
+            if (coolDonw < MinCoolDown)
+            {
+                _coolDown = MinCoolDown;
+                _sleep = new WaitForSeconds(_coolDown);
+                Debug.Log(_coolDown);
+                return;
+            }
+
+            _coolDown = coolDonw;
+            _sleep = new WaitForSeconds(_coolDown);
+        }
+
+        
 
         public void SetTarget(BaseEnemy target)
         {
@@ -74,9 +122,9 @@ namespace Towers
 
         private void Shoot() 
         {
-            Bullet bullet = _pool.Get(_spawnPoint);
+            Bullet bullet = _pool.Get(transform);
             
-            bullet.Construct(_target.transform, _target.Health);
+            bullet.Construct(_target.transform, _target.Health, _damage);
         }
 
         private void TargetDie()

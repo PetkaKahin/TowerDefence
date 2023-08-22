@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2304b80f24ce6f41b73fa53eda1537e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxRange: 8
   _range: 5
 --- !u!114 &7994131228733730323
 MonoBehaviour:
@@ -175,5 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8736ed2ea23e8445a119c77fbf9b78b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coolDown: 0.1
-  _spawnPoint: {fileID: 8076329425409957837}
+  _coolDown: 1
+  _minCoolDown: 0.05
+  _damage: 10
+  _maxDamage: 10

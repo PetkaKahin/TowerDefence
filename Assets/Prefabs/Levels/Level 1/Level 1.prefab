@@ -614,6 +614,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5093140215051781297}
   - component: {fileID: 2486853509662045619}
+  - component: {fileID: 7688602020978356474}
   - component: {fileID: 2141342912122189121}
   m_Layer: 0
   m_Name: Level 1
@@ -657,10 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d691daef78763b439db49646009924e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapPoints: {fileID: 0}
-  _bulletPool: {fileID: 5135652467111056576}
-  _enemyPool: {fileID: 6160523943538062243}
-  _UI: {fileID: 2124036405015557765}
+  _mapConfig: {fileID: 0}
   _enemy: {fileID: 6163136734406378965, guid: f36a38654a343944682440d1d9bd12ca, type: 3}
   _enemyConfig: {fileID: 11400000, guid: f34e3a6694fbfaf4bbff0741b66bbc37, type: 2}
   _towers:
@@ -669,6 +667,24 @@ MonoBehaviour:
   - {fileID: 7124835506469527572, guid: b1b722df913588f43ae84b964812e5f3, type: 3}
   _enemySpawnerPrefab: {fileID: 1470394284583171690, guid: ad2f46b075264ed4483ae3be33b750bf, type: 3}
   _towerHeandlerUIPrefab: {fileID: 7327701627155922440, guid: edc89197e103d164fb31d6c010013296, type: 3}
+--- !u!114 &7688602020978356474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6524314674769418090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68fe235d12226a4889c317bbe3b5748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapPoints: {fileID: 2141342912122189121}
+  _bulletPool: {fileID: 5135652467111056576}
+  _enemyPool: {fileID: 6160523943538062243}
+  _UI: {fileID: 2124036405015557765}
+  EnemySpawners: []
+  TowerHeandlersUI: []
 --- !u!114 &2141342912122189121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,7 +720,10 @@ MonoBehaviour:
   - {fileID: 1444071979464872358}
   - {fileID: 1583970033507415195}
   - {fileID: 6666565033662167377}
-  _towerPoints: []
+  _towerPoints:
+  - {fileID: 3723189010565687103}
+  - {fileID: 8970730962725992729}
+  - {fileID: 8090629510688472964}
 --- !u!1 &6571664899339250317
 GameObject:
   m_ObjectHideFlags: 0

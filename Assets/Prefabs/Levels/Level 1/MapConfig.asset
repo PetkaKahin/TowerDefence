@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe58cc54cca19844b0bbfd88bfdb3b4, type: 3}
   m_Name: MapConfig
   m_EditorClassIdentifier: 
+  _towers:
+  - {fileID: 7124835506469527572, guid: b1b722df913588f43ae84b964812e5f3, type: 3}
+  _enemySpawner: {fileID: 1470394284583171690, guid: ad2f46b075264ed4483ae3be33b750bf, type: 3}
+  _enemyConfig: {fileID: 11400000, guid: f34e3a6694fbfaf4bbff0741b66bbc37, type: 2}
+  _enemy: {fileID: 6163136734406378965, guid: f36a38654a343944682440d1d9bd12ca, type: 3}
+  _towerHeandlerUI: {fileID: 7327701627155922440, guid: edc89197e103d164fb31d6c010013296, type: 3}
